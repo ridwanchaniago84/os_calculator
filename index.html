@@ -13,7 +13,7 @@
 <body>
     <nav>
         <div class="nav-wrapper" style="margin: 0 15px;">
-            <a href="#!" class="brand-logo center">OS</a>
+            <a href="#!" class="brand-logo center">Penjadwalan CPU</a>
             <ul class="left">
                 <li>
                     <a href="#" data-target="slide-out" class="sidenav-trigger" style="display: block;"><i
@@ -23,17 +23,59 @@
         </div>
     </nav>
 
-    <div class="container" style="margin-top: 35px;">
+    <div style="margin-top: 35px;">
         <div class="row">
-            <div class="col s12">
+            <div class="col s4">
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">Input Proses</span>
+                        <div class="row">
+                            <div id="input-container">
+                                <div>
+                                    <div class="col s12">
+                                        <h6>Proses 1</h6>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <input id="proses" type="text" class="validate">
+                                        <label for="proses">Proses</label>
+                                    </div>
+                                    <div class="input-field col s12">
+                                        <input id="tunggu" type="text" class="validate">
+                                        <label for="tunggu">Waktu Tunggu</label>
+                                    </div>
+                                    <div class="col s12">
+                                        <hr />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-field col s12">
+                                <button class="btn waves-effect waves-light" id="add-input" style="width: 100%;"
+                                    type="submit" name="action">Tambah Proses
+                                    <i class="material-icons left">add</i>
+                                </button>
+                            </div>
+
+                            <div class="input-field col s12">
+                                <button class="btn waves-effect waves-light red" id="remove-input" style="width: 100%;"
+                                    type="submit" name="action">Hapus Proses
+                                    <i class="material-icons left">remove</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col s8">
                 <div class="card">
                     <div class="card-content">
                         <span class="card-title">Nama Rumus</span>
                         <div class="row">
-                            <div class="input-field col s12">
+                            <!-- <div class="input-field col s12">
                                 <input id="" type="text" class="validate">
                                 <label for="">??</label>
-                            </div>
+                            </div> -->
                             <div class="input-field col s12">
                                 <button class="btn waves-effect waves-light" type="submit" name="action">Count
                                     <i class="material-icons right">send</i>
@@ -43,6 +85,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -50,7 +93,7 @@
         <li>
             <nav>
                 <div class="nav-wrapper" style="margin: 0 15px;">
-                    <a href="#!" class="brand-logo left">OS</a>
+                    <a href="#!" class="brand-logo left">Penjadwalan CPU</a>
                 </div>
             </nav>
         </li>
