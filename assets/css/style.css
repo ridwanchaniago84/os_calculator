@@ -1,22 +1,48 @@
+::-webkit-scrollbar {
+    height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #cccbcb;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    height: 5px;
+}
+
 body {
-    background-color: #434343;
+    background-color: #f5f7fa;
 }
 
 nav {
     background-color: rgba(75 48 184);
 }
 
-.sidenav {
-    background-color: #212121;
-}
-
 .sidenav li>a, .sidenav li>a>i {
-    color: #bcbfcd !important;
     transition: 0.2s;
 }
 
-.sidenav li>a:hover {
-    background-color: rgba(255, 255, 255, 0.05)
+.sidenav {
+    top: 64px;
+    transition: 0.3s;
+}
+
+.cus-sidenav {
+    width: 70px;
+    position: fixed;
+    left: 0;
+    top: 64px;
+    bottom: 0;
+    background-color: #ffffff;
+    margin: 0;
+    z-index: 2;
+    flex: 50%;
 }
 
 input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
@@ -43,4 +69,81 @@ input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-def
 
 hr {
     border-top: 1px solid #f1f1;
+}
+
+.ruler {
+    position: relative;
+    margin-top: 15px;
+    display: flex;
+}
+
+.ruler .cm {
+    display: flex;
+}
+
+.ruler .cm, .ruler {
+    gap: 12px;
+}
+
+.ruler .cm,
+.ruler .mm {
+    border-left: 1px solid #555;
+    height: 40px;
+}
+
+.process, .time {
+    position: absolute;
+    font: 11px/1 sans-serif;
+    display: block;
+}
+
+.process {
+    top: -15px;
+}
+
+.time {
+    bottom: -15px;
+}
+
+.ruler .mm {
+    height: 20px;
+}
+
+.ruler .mm {
+    margin-left: 11px;
+}
+
+.ruler .mm~.mm {
+    margin-left: 0;
+}
+
+#average {
+    margin-bottom: 15px;
+}
+
+#result {
+    display: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+#result.active {
+    background: rgba(255, 255, 255, 0.3);
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+    transform: scale(1);
+}
+
+.wide-container {
+    margin: 35px 50px 0;
+    
+    transition: .3s;
+}
+
+.wide-container.active {
+    margin-left: 333px;
+}
+
+.card-title > div {
+    transition: .5s ease-in;
 }

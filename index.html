@@ -11,98 +11,104 @@
 </head>
 
 <body>
-    <nav>
-        <div class="nav-wrapper" style="margin: 0 15px;">
-            <a href="#!" class="brand-logo center">Penjadwalan CPU</a>
-            <ul class="left">
-                <li>
-                    <a href="#" data-target="slide-out" class="sidenav-trigger" style="display: block;"><i
-                            class="material-icons">menu</i></a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper" style="margin: 0 15px;">
+                <a href="#!" class="brand-logo left">
+                    <img src="assets/img/logo.png" width="45px" style="margin-top: 10px;" alt="logo" />
+                </a>
+                <ul class="right">
+                    <li>
+                        <!-- <a href="#" data-target="slide-out" class="sidenav-trigger" style="display: block;"><i
+                            class="material-icons">menu</i></a> -->
+                        <a href="#" class="sidenav-trigger" style="display: block;"><i
+                                class="material-icons">menu</i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <ul id="slide-out" class="sidenav">
+        <!-- <li>
+                <nav>
+                    <div class="nav-wrapper" style="margin: 0 15px;">
+                        <a href="#!" class="brand-logo center">
+                            <img src="assets/img/logo.png" width="50px" style="margin-top: 8px;" alt="logo" />
+                        </a>
+                    </div>
+                </nav>
+            </li> -->
+        <li><a class="subheader">Algoritma CPU</a></li>
+        <li><a href="#!" onclick="changeSection('fcfs')"><i class="material-icons">timelapse</i>FCFS</a></li>
+        <li><a href="#!" onclick="changeSection('priority')"><i class="material-icons">timelapse</i>Priority
+                Scheduling</a></li>
+    </ul>
 
-    <div style="margin-top: 35px;">
-        <div class="row">
-            <div class="col s4">
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title">Input Proses</span>
-                        <div class="row">
-                            <div id="input-container">
-                                <div>
-                                    <div class="col s12">
-                                        <h6>Proses 1</h6>
-                                    </div>
-                                    <div class="input-field col s12">
-                                        <input id="proses" type="text" class="validate">
-                                        <label for="proses">Proses</label>
-                                    </div>
-                                    <div class="input-field col s12">
-                                        <input id="tunggu" type="text" class="validate">
-                                        <label for="tunggu">Waktu Tunggu</label>
-                                    </div>
-                                    <div class="col s12">
-                                        <hr />
-                                    </div>
+    <div class="wide-container">
+        <div class="col s4">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title" id="method-name">
+                        <div>First-Come First-Served Scheduling</div>
+                    </span>
+                    <div class="row">
+                        <div id="input-container">
+                            <div>
+                                <div class="col s12">
+                                    <h6>Proses 1</h6>
+                                </div>
+                                <div class="input-field col s6">
+                                    <input id="tunggu" type="number" class="tunggu-input" class="validate">
+                                    <label for="tunggu">Burst Time</label>
+                                </div>
+
+                                <div class="input-field col s6">
+                                    <input id="priority" type="number" class="priority-input" class="validate">
+                                    <label for="priority">Priority</label>
+                                </div>
+                                <div class="col s12">
+                                    <hr />
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="input-field col s12">
-                                <button class="btn waves-effect waves-light" id="add-input" style="width: 100%;"
-                                    type="submit" name="action">Tambah Proses
-                                    <i class="material-icons left">add</i>
-                                </button>
-                            </div>
+                        <div class="input-field col s6">
+                            <button class="btn waves-effect waves-light" id="add-input" style="width: 100%;"
+                                type="submit" name="action">Tambah Proses
+                                <i class="material-icons left">add</i>
+                            </button>
+                        </div>
 
-                            <div class="input-field col s12">
-                                <button class="btn waves-effect waves-light red" id="remove-input" style="width: 100%;"
-                                    type="submit" name="action">Hapus Proses
-                                    <i class="material-icons left">remove</i>
-                                </button>
-                            </div>
+                        <div class="input-field col s6">
+                            <button class="btn waves-effect waves-light red" id="remove-input" style="width: 100%;"
+                                type="submit" name="action">Hapus Proses
+                                <i class="material-icons left">remove</i>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col s8">
-                <div class="card">
-                    <div class="card-content">
-                        <span class="card-title">Nama Rumus</span>
-                        <div class="row">
-                            <!-- <div class="input-field col s12">
-                                <input id="" type="text" class="validate">
-                                <label for="">??</label>
-                            </div> -->
-                            <div class="input-field col s12">
-                                <button class="btn waves-effect waves-light" type="submit" name="action">Count
-                                    <i class="material-icons right">send</i>
-                                </button>
-                            </div>
+        <div class="col s8">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Result</span>
+                    <div class="row">
+                        <div class="col s12" id="result">
+                            <div class="ruler"></div>
+                            <div id="average" style="margin-top: 15px;"></div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-
-    <ul id="slide-out" class="sidenav">
-        <li>
-            <nav>
-                <div class="nav-wrapper" style="margin: 0 15px;">
-                    <a href="#!" class="brand-logo left">Penjadwalan CPU</a>
-                </div>
-            </nav>
-        </li>
-        <li><a href="#!"><i class="material-icons">timelapse</i>Nama Rumus</a></li>
-    </ul>
 
     <script type="text/javascript" src="assets/js/jquery-3.6.4.min.js"></script>
     <script type="text/javascript" src="assets/js/materialize.min.js"></script>
     <script type="text/javascript" src="assets/js/utils.js"></script>
+    <script type="text/javascript" src="assets/js/scroll.js"></script>
 </body>
 
 </html>
