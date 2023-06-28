@@ -40,7 +40,11 @@
             </li> -->
         <li><a class="subheader">Algoritma CPU</a></li>
         <li><a href="#!" onclick="changeSection('fcfs')"><i class="material-icons">timelapse</i>FCFS</a></li>
+        <li><a href="#!" onclick="changeSection('sjf-n')"><i class="material-icons">timelapse</i>SJF (Non
+                preemptive)</a></li>
+        <li><a href="#!" onclick="changeSection('sjf')"><i class="material-icons">timelapse</i>SJF (Preemptive)</a></li>
         <li><a href="#!" onclick="changeSection('priority')"><i class="material-icons">timelapse</i>Priority
+        <li><a href="#!" onclick="changeSection('robin')"><i class="material-icons">timelapse</i>Round-Robin
                 Scheduling</a></li>
     </ul>
 
@@ -54,6 +58,10 @@
                     <div class="row">
                         <div id="input-container">
                             <div>
+                                <div class="input-field col s12">
+                                    <input id="quantum" type="number" class="quantum-input" class="validate">
+                                    <label for="quantum">Quantum Time</label>
+                                </div>
                                 <div class="col s12">
                                     <h6>Proses 1</h6>
                                 </div>
@@ -107,6 +115,7 @@
 
     <script type="text/javascript" src="assets/js/jquery-3.6.4.min.js"></script>
     <script type="text/javascript" src="assets/js/materialize.min.js"></script>
+    <script type="text/javascript" src="assets/js/robbin.js"></script>
     <script type="text/javascript" src="assets/js/utils.js"></script>
     <script type="text/javascript" src="assets/js/scroll.js"></script>
 </body>

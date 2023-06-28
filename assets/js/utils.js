@@ -8,19 +8,6 @@ let firstInput = true;
 let sideBarActive = false;
 let currentSection = 'fcfs';
 
-function debounce(func, wait) {
-    var timeout;
-    return function () {
-        var context = this, args = arguments;
-        var later = function () {
-            timeout = null;
-            func.apply(context, args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-};
-
 const input = (index) => {
     return `
         <div>
@@ -29,7 +16,7 @@ const input = (index) => {
             </div>
             <div class="input-field col s6">
                 <input id="tunggu-${index}" class="tunggu-input" type="number" class="validate">
-                <label for="tunggu-${index}">Waktu Tunggu</label>
+                <label for="tunggu-${index}">Burst Time</label>
             </div>
             <div class="input-field col s6">
                 <input id="priority-${index}" type="number" class="priority-input" class="validate">
@@ -47,6 +34,33 @@ const averageTimeRender = (formula, result) => {
         <i style="display: block;">Rata-Rata waktu tunggu:</i>
         <span><i>${formula} = <b><u>${result} milidetik</u></b></i></span>
     `;
+}
+
+const renderFormula = (times) => {
+    let formula = '<span><i>(';
+    let resultFormula = 0;
+
+    times.forEach((time, index) => {
+        formula += `${index === 0 ? '' : ' + '}${time}`
+        resultFormula += time;
+    });
+
+    formula += `)/${times.length}`
+    const averageTime = resultFormula / times.length;
+
+    $('#average').html(averageTimeRender(formula, averageTime.toFixed(2)));
+
+    if (firstInput) $('#result').slideDown();
+}
+
+const writeRuler = (ruler, currentTime) => {
+    ruler += `
+        <div class='cm'>
+            <div class="time">${currentTime}</div>
+        </div>
+    `;
+
+    $('.ruler').html(ruler);
 }
 
 const firstCome = () => {
@@ -67,53 +81,14 @@ const firstCome = () => {
         currentTime += process.time
     });
 
-    ruler += `
-        <div class='cm'>
-            <div class="time">${currentTime}</div>
-        </div>
-    `;
-
-    let formula = '<span><i>(';
-    let resultFormula = 0;
-
-    times.forEach((time, index) => {
-        formula += `${index === 0 ? '' : ' + '}${time}`
-        resultFormula += time;
-    });
-
-    formula += `)/${times.length}`
-
-    $('.ruler').html(ruler);
-    $('#average').html(averageTimeRender(formula, resultFormula / times.length));
-
-    if (firstInput) $('#result').slideDown();
-}
-
-const sortingData = () => {
-    const sortedProcessObj = [];
-
-    for (let i = 0; i < processObj.length; i++) {
-        sortedProcessObj.push(processObj[i]);
-    }
-
-    for (let i = 0; i < sortedProcessObj.length - 1; i++) {
-        for (let j = 0; j < sortedProcessObj.length - i - 1; j++) {
-            if (sortedProcessObj[j].prioritySch > sortedProcessObj[j + 1].prioritySch) {
-                const temp = sortedProcessObj[j];
-                sortedProcessObj[j] = sortedProcessObj[j + 1];
-                sortedProcessObj[j + 1] = temp;
-            }
-        }
-    }
-
-    return sortedProcessObj;
+    writeRuler(ruler, currentTime);
+    renderFormula(times);
 }
 
 const prioritySch = () => {
     let ruler = '';
     let currentTime = 0;
     let times = [];
-    // const sortedData = sortingData();
     let sortedData = [];
 
     for (let i = 0; i < processObj.length; i++) {
@@ -135,26 +110,33 @@ const prioritySch = () => {
         currentTime += process.time
     });
 
-    ruler += `
-        <div class='cm'>
-            <div class="time">${currentTime}</div>
-        </div>
-    `;
+    writeRuler(ruler, currentTime, times);
+    renderFormula(times);
+}
 
-    let formula = '<span><i>(';
-    let resultFormula = 0;
+const robbinCalc = () => {
+    let ruler = '';
+    let currentTime = 0;
+    let processBurst = [];
 
-    times.forEach((time, index) => {
-        formula += `${index === 0 ? '' : ' + '}${time}`
-        resultFormula += time;
+    for (let i = 0; i < processObj.length; i++) {
+        processBurst.push(processObj[i].time);
+    }
+
+    const results = roundRobinScheduling(processBurst, parseInt($('.quantum-input').val()));
+
+    results.chart.forEach((result) => {
+        ruler += rulerSection({
+            indexProcess: result.process,
+            time: result.startTime,
+            second: result.endTime - result.startTime - 1
+        });
+
+        currentTime = result.endTime
     });
 
-    formula += `)/${times.length}`
-
-    $('.ruler').html(ruler);
-    $('#average').html(averageTimeRender(formula, resultFormula / times.length));
-
-    if (firstInput) $('#result').slideDown();
+    writeRuler(ruler, currentTime);
+    renderFormula(results.formula);
 }
 
 const renderRuler = () => {
@@ -164,6 +146,9 @@ const renderRuler = () => {
             break;
         case 'priority':
             prioritySch();
+            break;
+        case 'robin':
+            robbinCalc();
             break;
     }
 }
@@ -180,10 +165,14 @@ const inputListener = () => {
     $('.priority-input').on('input', function () {
         $('.priority-input').each((index, element) => {
             processObj[index].prioritySch = $(element).val() == '' ? 0 : parseInt($(element).val());
-
         });
 
-        if (currentSection === 'fcfs') return;
+        if (currentSection != 'priority') return;
+        renderRuler();
+    });
+
+    $('.quantum-input').on('input', function () {
+        if (currentSection != 'robin') return;
         renderRuler();
     });
 }
@@ -205,10 +194,19 @@ const getSectionName = (section) => {
 
     switch (section) {
         case 'fcfs':
-            sectionName = 'First-Come First-Served Scheduling'
+            sectionName = 'First-Come First-Served Scheduling';
+            break;
+        case 'sjf-n':
+            sectionName = 'Shortest Job First Scheduler (Non preemptive)';
+            break;
+        case 'sjf':
+            sectionName = 'Shortest Job First Scheduler (Preemptive)';
             break;
         case 'priority':
             sectionName = 'Priority Scheduling';
+            break;
+        case 'robin':
+            sectionName = 'Round-Robin Scheduling';
             break;
     }
 
@@ -222,15 +220,13 @@ const changeSection = async (section) => {
     $('#method-name>div').css({ "transform": "translateX(50%)", 'opacity': '0' });
     await sleep(500);
 
-    // $('#method-name>div').remove()
-
     $('#method-name').html(`<div style="opacity: 0">${sectionName}</div>`)
     await sleep(100);
     $('#method-name>div').css({ 'opacity': '1' });
     currentSection = section;
-    
+
     $('#result').slideUp()
-    
+
     await sleep(500);
     renderRuler();
     $('#result').slideDown()
