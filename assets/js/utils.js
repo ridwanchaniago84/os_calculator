@@ -261,8 +261,8 @@ const inputListener = () => {
             processObj[index].arrivalTime = $(element).val() == '' ? 0 : parseFloat($(element).val());
         });
 
-        if (currentSection != 'sjf') return;
-        renderRuler();
+        if (currentSection === 'sjf' || currentSection === 'sjf-n')
+            renderRuler();
     });
 
     $('.quantum-input').on('input', function () {
