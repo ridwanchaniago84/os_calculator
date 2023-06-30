@@ -1,6 +1,7 @@
 const processObj = [{
     processIndex: 1,
     time: 0,
+    arrivalTime: 0,
     prioritySch: 0
 }];
 
@@ -14,11 +15,15 @@ const input = (index) => {
             <div class="col s12">
                 <h6>Proses ${index}</h6>
             </div>
-            <div class="input-field col s6">
+            <div class="input-field col s4">
                 <input id="tunggu-${index}" class="tunggu-input" type="number" class="validate">
                 <label for="tunggu-${index}">Burst Time</label>
             </div>
-            <div class="input-field col s6">
+            <div class="input-field col s4">
+                <input id="arrival-${index}" type="number" class="arrival-input" class="validate">
+                <label for="arrival-${index}">Arrival Time</label>
+            </div>
+            <div class="input-field col s4">
                 <input id="priority-${index}" type="number" class="priority-input" class="validate">
                 <label for="priority-${index}">Priority</label>
             </div>
@@ -85,6 +90,17 @@ const firstCome = () => {
     renderFormula(times);
 }
 
+const sortTimes = (times) => {
+    let sortedTimes = []
+    times.sort((a, b) => a.processIndex - b.processIndex);
+
+    times.forEach((time) => {
+        sortedTimes.push(time.wait);
+    });
+
+    return sortedTimes;
+}
+
 const prioritySch = () => {
     let ruler = '';
     let currentTime = 0;
@@ -106,12 +122,45 @@ const prioritySch = () => {
             second: process.time - 1
         });
 
-        times.push(currentTime);
+        times.push({
+            processIndex: process.processIndex,
+            wait: currentTime
+        });
         currentTime += process.time
     });
 
-    writeRuler(ruler, currentTime, times);
-    renderFormula(times);
+    const sortedTimes = sortTimes(times);
+
+    writeRuler(ruler, currentTime);
+    renderFormula(sortedTimes);
+}
+
+const sffNPre = () => {
+    let ruler = '';
+    let currentTime = 0;
+    let processData = [];
+
+    for (let i = 0; i < processObj.length; i++) {
+        if (processObj[i].time > 0)
+            processData.push(processObj[i]);
+    }
+
+    const results = sjfNonPreemptive(processData);
+
+    results.ganttChart.forEach((result) => {
+        ruler += rulerSection({
+            indexProcess: result.processId,
+            time: result.startTime,
+            second: result.endTime - result.startTime - 1
+        });
+
+        currentTime = result.endTime
+    });
+
+    const sortedTimes = sortTimes(results.waitingTimes);
+
+    writeRuler(ruler, currentTime);
+    renderFormula(sortedTimes);
 }
 
 const robbinCalc = () => {
@@ -135,14 +184,50 @@ const robbinCalc = () => {
         currentTime = result.endTime
     });
 
+    const sortedTimes = sortTimes(results.formula);
+
     writeRuler(ruler, currentTime);
-    renderFormula(results.formula);
+    renderFormula(sortedTimes);
+}
+
+const sffPre = () => {
+    let ruler = '';
+    let currentTime = 0;
+    let processData = [];
+
+    for (let i = 0; i < processObj.length; i++) {
+        if (processObj[i].time > 0)
+            processData.push(processObj[i]);
+    }
+
+    const results = sjfPreemptive(processData);
+
+    results.ganttChart.forEach((result) => {
+        ruler += rulerSection({
+            indexProcess: result.processId,
+            time: result.startTime,
+            second: result.endTime - result.startTime - 1
+        });
+
+        currentTime = result.endTime
+    });
+
+    const sortedTimes = sortTimes(results.waitingTimes);
+
+    writeRuler(ruler, currentTime);
+    renderFormula(sortedTimes);
 }
 
 const renderRuler = () => {
     switch (currentSection) {
         case 'fcfs':
             firstCome();
+            break;
+        case 'sjf-n':
+            sffNPre();
+            break;
+        case 'sjf':
+            sffPre();
             break;
         case 'priority':
             prioritySch();
@@ -168,6 +253,15 @@ const inputListener = () => {
         });
 
         if (currentSection != 'priority') return;
+        renderRuler();
+    });
+
+    $('.arrival-input').on('input', function () {
+        $('.arrival-input').each((index, element) => {
+            processObj[index].arrivalTime = $(element).val() == '' ? 0 : parseFloat($(element).val());
+        });
+
+        if (currentSection != 'sjf') return;
         renderRuler();
     });
 
@@ -233,7 +327,6 @@ const changeSection = async (section) => {
 }
 
 $(document).ready(function () {
-    // $('.sidenav').sidenav();
     $('.sidenav-trigger').click(() => {
         if (sideBarActive) {
             $('.sidenav').css({ "transform": "" });
@@ -256,8 +349,13 @@ $(document).ready(function () {
         $('input').off('input');
         inputListener();
 
-        processObj.push({});
-        processObj[totalProcess].processIndex = currentProcess;
+        processObj.push({
+            processIndex: currentProcess,
+            time: 0,
+            arrivalTime: 0,
+            prioritySch: 0
+        });
+        // processObj[totalProcess].processIndex = currentProcess;
     });
 
     $('#remove-input').click(() => {

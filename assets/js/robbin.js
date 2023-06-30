@@ -36,13 +36,20 @@ function roundRobinScheduling(processes, timeQuantum) {
         }
     }
 
+    let waitingTimes = [];
+
     for (let i = 0; i < n; i++) {
-        turnAroundTime[i] -= waitingTime[i];
+        // turnAroundTime[i] -= waitingTime[i];
         waitingTime[i] = turnAroundTime[i] - processes[i];
+
+        waitingTimes.push({
+            processIndex: i,
+            wait: waitingTime[i]
+        });
     }
 
     return {
         chart: ganttChart,
-        formula: waitingTime
+        formula: waitingTimes
     };
 }
